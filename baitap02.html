@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 2 - Form đăng ký</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h1>Form đăng ký người dùng</h1>
+    <p>Bài thực hành 2 - JavaScript</p>
+</header>
+
+<nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài tập 1</a>
+    <a href="baitap03.html">Bài tập 3</a>
+</nav>
+
+<main class="container">
+    <form id="registerForm">
+        <label for="name">Họ và tên</label>
+        <input id="name" name="name" type="text"
+               required maxlength="100" autocomplete="name">
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email"
+               required autocomplete="email">
+
+        <label for="password">Mật khẩu</label>
+        <input id="password" name="password" type="password"
+               required minlength="8" autocomplete="new-password"
+               aria-describedby="passwordHelp">
+        <small id="passwordHelp">
+            Ít nhất 8 ký tự, có chữ hoa, chữ thường và số.
+        </small>
+
+        <p>
+            <label>
+                <input id="agree" type="checkbox" style="width:auto">
+                Tôi đồng ý với điều khoản sử dụng.
+            </label>
+        </p>
+
+        <button type="submit">Đăng ký</button>
+        <p id="formMessage" class="notice" role="status"
+           aria-live="polite"></p>
+    </form>
+
+    <h3>Giải thích logic</h3>
+    <p>
+        Sự kiện submit được xử lý bằng JavaScript. Chương trình kiểm tra tên,
+        email, mật khẩu và trạng thái checkbox. Nếu dữ liệu hợp lệ, tên và email
+        được lưu vào LocalStorage rồi hiện thông báo thành công. Không lưu mật
+        khẩu dạng văn bản vào LocalStorage vì dữ liệu ở đây có thể bị đọc bởi
+        JavaScript chạy trên cùng website.
+    </p>
+</main>
+
+<script>
+const registerForm = document.getElementById("registerForm");
+const formMessage = document.getElementById("formMessage");
+
+registerForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const agreed = document.getElementById("agree").checked;
+
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+
+    if (!name) {
+        formMessage.textContent = "Vui lòng nhập họ và tên.";
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        formMessage.textContent = "Email chưa hợp lệ.";
+        return;
+    }
+
+    if (password.length < 8 || !hasUpper || !hasLower || !hasNumber) {
+        formMessage.textContent =
+            "Mật khẩu phải có ít nhất 8 ký tự, chữ hoa, chữ thường và số.";
+        return;
+    }
+
+    if (!agreed) {
+        formMessage.textContent = "Bạn cần đồng ý với điều khoản.";
+        return;
+    }
+
+    try {
+        const savedUsers = JSON.parse(
+            localStorage.getItem("registeredUsers") || "[]"
+        );
+
+        savedUsers.push({
+            name: name,
+            email: email,
+            createdAt: new Date().toISOString()
+        });
+
+        localStorage.setItem("registeredUsers", JSON.stringify(savedUsers));
+        formMessage.textContent =
+            "Đăng ký thành công! Tên và email đã được lưu trên trình duyệt này.";
+        registerForm.reset();
+    } catch (error) {
+        formMessage.textContent =
+            "Không thể lưu dữ liệu. Trình duyệt có thể đang chặn LocalStorage.";
+    }
+});
+</script>
+</body>
+</html>

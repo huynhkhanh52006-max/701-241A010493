@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trả lời lý thuyết - Lập trình Web</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h1>PHẦN 1 - LÝ THUYẾT</h1>
+    <p>Đề thi kết thúc học phần Lập trình Web</p>
+</header>
+
+<nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài tập 1</a>
+    <a href="baitap02.html">Bài tập 2</a>
+    <a href="baitap03.html">Bài tập 3</a>
+    <a href="contact.html">Điểm danh</a>
+</nav>
+
+<main class="container">
+    <section>
+        <h2>Câu 1. Phân biệt position: absolute và relative</h2>
+        <p>
+            <strong>position: relative</strong> định vị phần tử tương đối với
+            vị trí ban đầu của chính nó. Phần tử vẫn giữ chỗ trong bố cục.
+            Có thể dùng để dịch chuyển nhẹ một phần tử hoặc làm mốc định vị
+            cho phần tử con có position: absolute.
+        </p>
+        <p>
+            <strong>position: absolute</strong> đưa phần tử ra khỏi luồng bố cục
+            thông thường và định vị theo tổ tiên gần nhất có position khác
+            static. Nếu không có tổ tiên như vậy, phần tử thường được định vị
+            theo khối chứa ban đầu của trang.
+        </p>
+        <pre><code>.card {
+    position: relative;
+}
+
+.badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}</code></pre>
+        <p>
+            Ví dụ: nhãn “Mới” đặt ở góc trên bên phải của thẻ sản phẩm.
+            Khi responsive, có thể dùng Grid/Flexbox, phần trăm và media query
+            để thẻ thay đổi kích thước. Relative và absolute không tự làm trang
+            responsive; cần thiết kế kích thước và vị trí phù hợp với màn hình.
+            Khi deploy, CSS vẫn hoạt động nếu đường dẫn file đúng. Hosting không
+            tự sửa lỗi bố cục trên thiết bị khác.
+        </p>
+    </section>
+
+    <section>
+        <h2>Câu 2. Đăng ký domain và cấu hình hosting</h2>
+        <p>
+            Quy trình cơ bản gồm: chọn tên miền, kiểm tra tên miền còn khả dụng,
+            đăng ký qua nhà cung cấp, chọn hosting, tải mã nguồn lên hosting,
+            cấu hình DNS và kiểm tra website bằng trình duyệt. Tên miền là địa
+            chỉ dễ nhớ của website; hosting là nơi lưu các file website.
+        </p>
+        <p>
+            DNS giúp chuyển tên miền thành địa chỉ máy chủ tương ứng. Các bản ghi
+            thường gặp gồm A/AAAA, CNAME và MX. Sau khi đổi DNS có thể cần thời
+            gian để thông tin được cập nhật trên các hệ thống.
+        </p>
+        <p>
+            Hai công cụ triển khai website tĩnh phổ biến là GitHub Pages và
+            Netlify. Có thể đưa các file HTML, CSS, JavaScript lên GitHub rồi
+            bật Pages; hoặc kết nối kho Git với Netlify để tự động triển khai
+            khi cập nhật mã nguồn.
+        </p>
+        <p>
+            Rủi ro bảo mật gồm để lộ khóa API hoặc mật khẩu trong mã JavaScript,
+            dùng thư viện lỗi thời, lưu mật khẩu trong LocalStorage, cấu hình
+            quyền truy cập sai và dùng biểu mẫu mà không kiểm tra dữ liệu ở
+            máy chủ. Không nên đưa bí mật vào mã phía trình duyệt; website thực
+            tế cần HTTPS, kiểm tra dữ liệu phía máy chủ và quản lý quyền phù hợp.
+        </p>
+    </section>
+
+    <section>
+        <h2>Câu 3. So sánh var, let và const</h2>
+        <p>
+            <strong>var</strong> có phạm vi hàm hoặc phạm vi toàn cục nếu khai
+            báo ngoài hàm; có thể khai báo lại và được hoisting với giá trị
+            ban đầu là undefined. <strong>let</strong> và
+            <strong>const</strong> có phạm vi khối lệnh, không thể khai báo lại
+            cùng tên trong cùng phạm vi và ở trong vùng Temporal Dead Zone trước
+            khi được khai báo. const yêu cầu giá trị khởi tạo và không thể gán
+            lại biến, nhưng thuộc tính của object khai báo bằng const vẫn có thể
+            thay đổi.
+        </p>
+        <pre><code>console.log(a); // undefined
+var a = 10;
+
+// console.log(b); // ReferenceError
+let b = 20;
+
+const age = 18;
+// age = 19; // TypeError</code></pre>
+        <p>
+            Lỗi thường gặp là đọc biến let/const trước dòng khai báo hoặc gán
+            lại biến const. Để debug trong Chrome DevTools, nhấn F12, mở tab
+            Console xem thông báo lỗi và dòng phát sinh lỗi. Trong Sources,
+            có thể đặt breakpoint, chạy từng bước và xem giá trị biến.
+        </p>
+    </section>
+
+    <section>
+        <h2>Câu 4. Event Delegation</h2>
+        <p>
+            Event Delegation là kỹ thuật đặt một trình xử lý sự kiện trên phần tử
+            cha thay vì gắn riêng lên từng phần tử con. Sự kiện phát sinh ở phần
+            tử con sẽ nổi bọt lên phần tử cha; chương trình dùng event.target
+            hoặc closest() để xác định phần tử cần xử lý.
+        </p>
+        <pre><code>const list = document.querySelector("#productList");
+
+list.addEventListener("click", function(event) {
+    const button = event.target.closest(".delete-button");
+
+    if (!button || !list.contains(button)) return;
+
+    button.closest(".card").remove();
+});</code></pre>
+        <p>
+            Ví dụ trên xử lý nút xóa trong danh sách sản phẩm. Khi thêm sản phẩm
+            mới, không cần gắn lại sự kiện cho từng nút xóa, vì phần tử cha vẫn
+            nhận sự kiện nổi bọt. Cách này giảm số lượng trình xử lý và thuận
+            tiện cho danh sách động. HTML tạo cấu trúc, CSS tạo giao diện, còn
+            JavaScript xử lý sự kiện và cập nhật nội dung.
+        </p>
+    </section>
+
+    <p><a class="btn" href="index.html">Quay về trang chủ</a></p>
+</main>
+
+<footer>Phần lý thuyết - Lập trình Web</footer>
+</body>
+</html>

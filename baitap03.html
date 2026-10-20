@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 3 - Countdown Timer</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <h1>Đồng hồ đếm ngược</h1>
+    <p>Bài thực hành 3 - JavaScript</p>
+</header>
+
+<nav>
+    <a href="index.html">Trang chủ</a>
+    <a href="baitap01.html">Bài tập 1</a>
+    <a href="baitap02.html">Bài tập 2</a>
+</nav>
+
+<main class="container">
+    <div id="countdown" aria-live="polite">10:00</div>
+
+    <div style="text-align:center">
+        <button id="startButton" type="button">Bắt đầu</button>
+        <button id="pauseButton" type="button">Tạm dừng</button>
+        <button id="resetButton" type="button">Đặt lại</button>
+    </div>
+
+    <p id="timerMessage" class="notice" role="status">
+        Sẵn sàng bắt đầu.
+    </p>
+
+    <h3>Giải thích logic</h3>
+    <p>
+        setInterval() cập nhật thời gian mỗi giây. Biến intervalId lưu mã bộ
+        đếm để có thể gọi clearInterval() khi tạm dừng, đặt lại hoặc hết giờ.
+        Thời gian được lưu theo giây và chuyển thành phút, giây bằng phép chia
+        và phép lấy phần dư. Khi triển khai lên hosting tĩnh, đồng hồ chạy ở
+        trình duyệt người dùng; nếu cần thời gian chính xác giữa nhiều thiết bị,
+        ứng dụng thực tế phải đồng bộ với thời gian máy chủ.
+    </p>
+</main>
+
+<script>
+const countdown = document.getElementById("countdown");
+const timerMessage = document.getElementById("timerMessage");
+const startButton = document.getElementById("startButton");
+const pauseButton = document.getElementById("pauseButton");
+const resetButton = document.getElementById("resetButton");
+
+const INITIAL_SECONDS = 10 * 60;
+let remainingSeconds = INITIAL_SECONDS;
+let intervalId = null;
+
+function displayTime() {
+    const minutes = Math.floor(remainingSeconds / 60);
+    const seconds = remainingSeconds % 60;
+
+    countdown.textContent =
+        String(minutes).padStart(2, "0") + ":" +
+        String(seconds).padStart(2, "0");
+
+    countdown.classList.toggle("urgent", remainingSeconds < 60);
+}
+
+function stopInterval() {
+    if (intervalId !== null) {
+        clearInterval(intervalId);
+        intervalId = null;
+    }
+}
+
+function tick() {
+    remainingSeconds--;
+    displayTime();
+
+    if (remainingSeconds <= 0) {
+        remainingSeconds = 0;
+        displayTime();
+        stopInterval();
+        timerMessage.textContent = "Đã hết thời gian!";
+        alert("Đã hết 10 phút!");
+    }
+}
+
+function startTimer() {
+    if (intervalId !== null || remainingSeconds <= 0) {
+        return;
+    }
+
+    timerMessage.textContent = "Đồng hồ đang chạy.";
+    intervalId = setInterval(tick, 1000);
+}
+
+function pauseTimer() {
+    stopInterval();
+    if (remainingSeconds > 0) {
+        timerMessage.textContent = "Đồng hồ đã tạm dừng.";
+    }
+}
+
+function resetTimer() {
+    stopInterval();
+    remainingSeconds = INITIAL_SECONDS;
+    displayTime();
+    timerMessage.textContent = "Đã đặt lại về 10 phút.";
+}
+
+startButton.addEventListener("click", startTimer);
+pauseButton.addEventListener("click", pauseTimer);
+resetButton.addEventListener("click", resetTimer);
+
+displayTime();
+</script>
+</body>
+</html>
